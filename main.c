@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 02:19:03 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/07 23:44:05 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/08 23:05:54 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,22 @@ pthread_mutex_t	mutex;
 void	*routine(void	*da)
 {
 	t_data	*data;
-
-	data = (t_data *)da;
-
-	//pthread_mutex_lock(&mutex);
-	//printf("philo nb = %d\n", philo_nb);
-	//pthread_mutex_unlock(&mutex);
-	
-	//printf("tte = %d\n", ti->time_to_die);
-	printf("philo nb = %d\n", data->philo_nb);
-
-	
 	/*int	is_dead;
 	int	is_eating;
 	int	is_sleeping;
 	
 	is_dead = 0;
 	is_eating = 0;
-	is_sleeping = 0;
+	is_sleeping = 0;*/
+	data = (t_data *)da;
+	printf("philo nb = %d\n", data->philo_nb);
+	
+	//pthread_mutex_lock(&mutex);
+	//pthread_mutex_unlock(&mutex);
 
-	while (is_dead == 0)
+	/*while (is_dead == 0)
 	{
+		
 		
 	}*/
 	
@@ -54,74 +49,88 @@ void	*routine(void	*da)
 	return (NULL);
 }
 
-void	ft_init_time(t_time *time, char **argv)
+void	ft_init_general(t_general *general, int argc, char **argv)
 {
-	time->nb_of_philo = ft_atoi(argv[1]);
-	time->time_to_die = ft_atoi(argv[2]);
-	time->time_to_eat = ft_atoi(argv[3]);
-	time->time_to_sleep = ft_atoi(argv[4]);
+	char	**tab;
+	
+	if (argc == 2)
+	{
+		tab = ft_split(argv[1], ' ');
+		general->nb_of_philo = ft_atoi(tab[0]);
+		general->time_to_die = ft_atoi(tab[1]);
+		general->time_to_eat = ft_atoi(tab[2]);
+		general->time_to_sleep = ft_atoi(tab[3]);
+		ft_free_tab(tab);
+	}
+	else
+	{
+		general->nb_of_philo = ft_atoi(argv[1]);
+		general->time_to_die = ft_atoi(argv[2]);
+		general->time_to_eat = ft_atoi(argv[3]);
+		general->time_to_sleep = ft_atoi(argv[4]);
+	}
 }
 
-//void	ft_init_mut()
+t_data	*ft_init_philo_structs(t_general *general)
+{
+	t_data		*data;
+	t_data		*buff;
+	int			*tab_mut;
+	int			i;
+	
+	data = malloc(sizeof(t_data) * general->nb_of_philo);
+	if (!data)
+		return (NULL);
+	tab_mut = malloc(sizeof(int) * general->nb_of_philo);
+	if (!tab_mut)
+		return (free_rt_null(data));
+	i = -1;
+	while (++i < general->nb_of_philo)
+		tab_mut[i] = 1;
+	buff = data;
+	i = -1;
+	while (++i < general->nb_of_philo)
+	{
+		buff->tab_mut = tab_mut;
+		buff->general = general;
+		buff->philo_nb = i + 1;
+		buff++;	
+	}
+	return (data);
+}
 
 int	main(int argc, char **argv)
 {
 	//pthread_t	*th;	//tableau avec 4 structures dedans
 	int			i;
 	t_data		*data;
-	t_data		*buff;
-	t_time		time;
+	t_general	general;
 	pthread_mutex_t	mutex;
-	int			*tab_mut;
+
 	
-	printf("OKKK\n");
 	if (ft_check_parsing(argc, argv) == ERROR)
 		return (0);
 	
-	pthread_mutex_init(&mutex, NULL);
-	printf("OKKK 2\n");	
-	ft_init_time(&time, argv);
-	data = malloc(sizeof(t_data) * time.nb_of_philo);
-	tab_mut = malloc(sizeof(int) * time.nb_of_philo);
-	printf("OKKK 3\n");	
+	pthread_mutex_init(&mutex, NULL);	
+	ft_init_general(&general, argc, argv);
+	data = ft_init_philo_structs(&general);
+	if (!data)
+		return (0);
 	i = -1;
-	while (++i < time.nb_of_philo)
-		tab_mut[i] = 1;
-	printf("OKKK 4\n");	
-	buff = data;
-	i = 0;
-	while (i < time.nb_of_philo)
+	while (++i < general.nb_of_philo)
 	{
-		buff->tab = tab_mut;
-		buff->time = &time;
-		buff->philo_nb = i + 1;
-		i++;
-		printf("bn = %d\n", buff->philo_nb);
-		buff++;	
-	}
-	printf("AAA\n");
-
-	i = 0;
-	buff = data;
-	while (i < time.nb_of_philo)
-	{
-		if (pthread_create(&buff->th, NULL, &routine, &buff)) //!= 0
+		if (pthread_create(&data[i].th, NULL, &routine, &data[i])) //!= 0
 			return (1);
-		printf("Thread %d has started execution\n", buff->philo_nb);
-		buff++;
-		i++;
+		printf("Thread %d has started execution\n", data[i].philo_nb);
 	}
-	i = 0;
-	buff = data;
-	while (i < time.nb_of_philo)
+	i = -1;
+	while (++i < general.nb_of_philo)
 	{
-		if (pthread_join(buff->th, NULL) != 0) //attend que le thread soit termine pour quitter le programme
+		if (pthread_join(data[i].th, NULL) != 0) //attend que le thread soit termine pour quitter le programme
 			return (2);
-		printf("Thread %d has finished execution\n", buff->philo_nb);
-		buff++;
-		i++;
+		printf("Thread %d has finished execution\n", data[i].philo_nb);
 	}
-	free(tab_mut);
+	free(data->tab_mut);
 	free(data);
 	pthread_mutex_destroy(&mutex);
 	//printf("Number of mails: %ld\n", mails);

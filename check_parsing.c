@@ -6,17 +6,70 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 18:51:40 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/07 17:34:32 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/08 23:02:30 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+int	ft_check_arg_2(char **argv)
+{
+	int		k;
+	char **tab;
+
+	k = 0;
+	tab = ft_split(argv[1], ' ');
+	while (tab[k])
+		k++;
+	ft_free_tab(tab);
+	if (k != 4)
+		return (ERROR);
+	return (0);
+}
+
+int	ft_check_arg_5(char **argv)
+{
+	int	k;
+	int	i;
+	char **tab;
+
+	i = -1;
+	k = 0;
+	while (argv[++i])
+	{
+		tab = ft_split(argv[i], ' ');
+		while (tab[k])
+			k++;
+		ft_free_tab(tab);
+		if (k != 1)
+			return (ERROR);
+	}
+	return (0);
+}
+
+int ft_check_arg(int argc, char **argv)
+{
+	if (argc == 2)
+	{
+		if (ft_check_arg_2(argv) == ERROR)
+			return (ERROR);
+	}
+	else if (argc == 5)
+	{
+		if (ft_check_arg_5(argv) == ERROR)
+			return (ERROR);
+	}
+	else if (argc != 5)
+		return (ERROR);
+	return (0);
+}
+
 int	ft_check_parsing(int argc, char **argv)
 {
-	if (argc != 5)
+	if (argc <= 1)
 		return (ERROR);
-	if (ft_check_correct_caracters(argv) == ERROR
+	if (ft_check_arg(argc, argv) == ERROR
+		|| ft_check_correct_caracters(argv) == ERROR
 		|| ft_check_correct_int(argv) == ERROR
 		|| ft_check_overflow(argv) == ERROR)
 	{
@@ -37,7 +90,7 @@ int	ft_check_correct_caracters(char **argv)
 	{
 		while (argv[i][j])
 		{
-			if (argv[i][j] != '+' && argv[i][j] != '-'
+			if (argv[i][j] != '+'
 				&& (argv[i][j] < '0' || argv[i][j] > '9')
 				&& argv[i][j] != ' ')
 				return (ERROR);
@@ -49,10 +102,9 @@ int	ft_check_correct_caracters(char **argv)
 	return (0);
 }
 
-int	ft_check_is_digit(t_data *va)
+int	ft_check_is_digit(t_rdm *va)
 {
-	if ((va->tab[va->k][0] == '-' || va->tab[va->k][0] == '+')
-		&& (va->tab[va->k][1] != '\0'))
+	if ((va->tab[va->k][0] == '+') && (va->tab[va->k][1] != '\0'))
 		va->j++;
 	while (va->tab[va->k][va->j])
 	{
@@ -68,7 +120,7 @@ int	ft_check_is_digit(t_data *va)
 
 int	ft_check_correct_int(char **argv)
 {
-	t_data	va;
+	t_rdm	va;
 
 	va.i = 0;
 	va.j = 0;
@@ -97,7 +149,7 @@ int	ft_check_correct_int(char **argv)
 
 int	ft_check_overflow(char **argv)
 {
-	t_data	va;
+	t_rdm	va;
 
 	va.i = 1;
 	va.j = 0;

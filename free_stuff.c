@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 16:06:47 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/07 18:18:46 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/08 19:00:03 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,10 @@ char	**ft_free_tab(char **tab)
 	}
 	free(tab);
 	return (NULL);
+}
+
+t_data	*free_rt_null(t_data *data)
+{
+	free(data);
+	return(NULL);
 }
