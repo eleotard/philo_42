@@ -6,27 +6,66 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 02:19:03 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/08 23:05:54 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/09 21:01:28 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long int		mails = 0;
-pthread_mutex_t	mutex;
-
 void	*routine(void	*da)
 {
 	t_data	*data;
-	/*int	is_dead;
-	int	is_eating;
-	int	is_sleeping;
+	int	is_dead;
 	
 	is_dead = 0;
-	is_eating = 0;
-	is_sleeping = 0;*/
 	data = (t_data *)da;
-	printf("philo nb = %d\n", data->philo_nb);
+//	printf("philo nb = %d\n", data->philo_nb);
+	while (is_dead == 0)
+	{
+		if ((data->philo_nb)%2 == 0)
+			usleep(1000);
+		
+		if (data->philo_nb == 1)
+		{
+			pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));	
+			pthread_mutex_lock(&(data->tab_mut[(data->general->nb_of_philo) - 1]));
+			printf("philo %d is eating", data->philo_nb);
+			usleep((data->general->time_to_eat) * 1000);
+			pthread_mutex_unlock(&(data->tab_mut[(data->philo_nb) - 1]));	
+			pthread_mutex_unlock(&(data->tab_mut[(data->general->nb_of_philo) - 1]));
+		}
+		else if (data->philo_nb == data->general->nb_of_philo)
+		{
+			pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));	
+			pthread_mutex_lock(&(data->tab_mut[0]));
+			printf("philo %d is eating", data->philo_nb);
+			usleep((data->general->time_to_eat) * 1000);
+			pthread_mutex_unlock(&(data->tab_mut[(data->philo_nb) - 1]));	
+			pthread_mutex_unlock(&(data->tab_mut[(data->general->nb_of_philo) - 1]));			
+		}
+		else
+		{
+			if ((data->philo_nb)%2 == 1)
+			{
+				pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));
+				pthread_mutex_lock(&(data->tab_mut[data->philo_nb]));
+				usleep((data->general->time_to_eat) * 1000);
+				//printf()// nb de millisecondes en format depuis le lancement
+				pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));
+				pthread_mutex_unlock(&(data->general->mutex));
+			}
+			else if ((data->philo_nb)%2 == 0)
+			{
+				pthread_mutex_lock(&(data->tab_mut[data->philo_nb]));
+				pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));
+				printf("philo %d is eating", data->philo_nb);
+				usleep((data->general->time_to_eat) * 1000);
+				pthread_mutex_unlock(&(data->general->mutex));
+				pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));
+			}
+		}
+		
+	}
 	
 	//pthread_mutex_lock(&mutex);
 	//pthread_mutex_unlock(&mutex);
@@ -60,6 +99,7 @@ void	ft_init_general(t_general *general, int argc, char **argv)
 		general->time_to_die = ft_atoi(tab[1]);
 		general->time_to_eat = ft_atoi(tab[2]);
 		general->time_to_sleep = ft_atoi(tab[3]);
+		general->nb_of_time = ft_atoi(tab[4]); // si ya que 4 ar, = 0, si 5 = arg 
 		ft_free_tab(tab);
 	}
 	else
@@ -68,6 +108,7 @@ void	ft_init_general(t_general *general, int argc, char **argv)
 		general->time_to_die = ft_atoi(argv[2]);
 		general->time_to_eat = ft_atoi(argv[3]);
 		general->time_to_sleep = ft_atoi(argv[4]);
+		general->nb_of_time = ft_atoi(argv[5]);
 	}
 }
 
@@ -111,11 +152,16 @@ int	main(int argc, char **argv)
 	if (ft_check_parsing(argc, argv) == ERROR)
 		return (0);
 	
-	pthread_mutex_init(&mutex, NULL);	
+	pthread_mutex_init(&mutex, NULL);
 	ft_init_general(&general, argc, argv);
+	if (general.nb_of_philo == 0)
+		return (0);
 	data = ft_init_philo_structs(&general);
 	if (!data)
 		return (0);
+	i = -1;
+	while (++i < general.nb_of_philo)
+		pthread_mutex_init(&data->tab_mut[i], NULL);
 	i = -1;
 	while (++i < general.nb_of_philo)
 	{
@@ -132,7 +178,9 @@ int	main(int argc, char **argv)
 	}
 	free(data->tab_mut);
 	free(data);
-	pthread_mutex_destroy(&mutex);
+	i = -1;
+	while (++i < general.nb_of_philo)
+		pthread_mutex_destroy(&data->tab_mut[i]);
 	//printf("Number of mails: %ld\n", mails);
 	return (0);
 }

@@ -6,43 +6,23 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 18:51:40 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/08 23:02:30 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/09 18:07:49 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_check_arg_2(char **argv)
+int	ft_check_parsing(int argc, char **argv)
 {
-	int		k;
-	char **tab;
-
-	k = 0;
-	tab = ft_split(argv[1], ' ');
-	while (tab[k])
-		k++;
-	ft_free_tab(tab);
-	if (k != 4)
+	if (argc <= 1)
 		return (ERROR);
-	return (0);
-}
-
-int	ft_check_arg_5(char **argv)
-{
-	int	k;
-	int	i;
-	char **tab;
-
-	i = -1;
-	k = 0;
-	while (argv[++i])
+	if (ft_check_arg(argc, argv) == ERROR
+		|| ft_check_correct_caracters(argv) == ERROR
+		|| ft_check_correct_int(argv) == ERROR
+		|| ft_check_overflow(argv) == ERROR)
 	{
-		tab = ft_split(argv[i], ' ');
-		while (tab[k])
-			k++;
-		ft_free_tab(tab);
-		if (k != 1)
-			return (ERROR);
+		ft_putstr_fd("Error\n", 2);
+		return (ERROR);
 	}
 	return (0);
 }
@@ -59,23 +39,13 @@ int ft_check_arg(int argc, char **argv)
 		if (ft_check_arg_5(argv) == ERROR)
 			return (ERROR);
 	}
-	else if (argc != 5)
-		return (ERROR);
-	return (0);
-}
-
-int	ft_check_parsing(int argc, char **argv)
-{
-	if (argc <= 1)
-		return (ERROR);
-	if (ft_check_arg(argc, argv) == ERROR
-		|| ft_check_correct_caracters(argv) == ERROR
-		|| ft_check_correct_int(argv) == ERROR
-		|| ft_check_overflow(argv) == ERROR)
+	else if (argc == 6)
 	{
-		ft_putstr_fd("Error\n", 2);
-		return (ERROR);
+		if (ft_check_arg_6(argv) == ERROR)
+			return (ERROR);
 	}
+	else
+		return (ERROR);
 	return (0);
 }
 

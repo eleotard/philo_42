@@ -1,0 +1,2 @@
+tout ce qui est malloc dans le parent, il faut pas le free dans l'enfant mais bien dans le parent lui meme
+si tu malloc un truc dans l'enfant  il faut aussi le free dans l'enfant

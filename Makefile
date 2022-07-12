@@ -6,7 +6,7 @@
 #    By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/07 17:44:44 by eleotard          #+#    #+#              #
-#    Updated: 2022/07/07 23:32:40 by eleotard         ###   ########.fr        #
+#    Updated: 2022/07/09 18:13:45 by eleotard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ NAME = philo
 
 SRCS =	main.c \
 		check_parsing.c \
+		check_parsing2.c \
 		ft_atoi_max.c 	\
 		free_stuff.c 	\
 

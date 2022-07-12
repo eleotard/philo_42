@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 13:53:31 by eleotard          #+#    #+#             */
-/*   Updated: 2021/11/25 13:53:31 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/09 18:12:38 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	ft_atoi(const char *nptr)
 	int	result;
 	int	sign;
 
+	if (!nptr)
+		return (0);
 	i = 0;
 	result = 0;
 	sign = 1;
