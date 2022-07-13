@@ -21,7 +21,12 @@
 
 # include "libft/libft.h"
 
-# define ERROR -1
+# define ERROR	-1
+# define NUL	-2
+# define EAT	0
+# define SLEEP	1
+# define THINK	2
+# define DEAD	3
 
 typedef struct s_general
 {
@@ -47,6 +52,8 @@ typedef struct s_philo
 	pthread_mutex_t	*mutex;
 	t_general		*general;
 	t_forks			forks;
+	long int		last_eat;
+	int				state;
 	int				philo_nb;
 	int				tms;
 }	t_philo;
@@ -77,9 +84,13 @@ int	ft_previous_check(int *sign, const char *nptr);
 int	ft_check_arg_2(char **argv);
 int	ft_check_arg_5(char **argv);
 int	ft_check_arg_6(char **argv);
+int	ft_check_correct_input(int argc, char **argv, t_general *general);
 
 /*FREE*/
 char	**ft_free_tab(char **tab);
 t_philo	*free_rt_null(t_philo *data);
+
+/*UTILS*/
+int	ft_find_nb_of_arg(char *str);
 
 #endif

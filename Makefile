@@ -17,6 +17,7 @@ SRCS =	main.c \
 		check_parsing2.c \
 		ft_atoi_max.c 	\
 		free_stuff.c 	\
+		philo_utils.c 	\
 
 OBJS = ${SRCS:%.c=%.o}
 
@@ -38,6 +39,9 @@ ${NAME}: ${OBJS} libft/libft.a
 
 libft/libft.a:
 	make -C libft
+
+ft_printf/lftprintf.a:
+	make -C ft_printf
 	
 clean:
 	${RM} ${OBJS}

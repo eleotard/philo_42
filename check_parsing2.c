@@ -66,3 +66,14 @@ int	ft_check_arg_6(char **argv)
 	}
 	return (0);
 }
+
+int	ft_check_correct_input(int argc, char **argv, t_general *general)
+{
+	if (general->nb_of_philo == 0 || general->nb_of_philo == 1)
+		return (ERROR);
+	if (argc == 6 && general->nb_of_time == 0)
+		return (ERROR);
+	else if (argc == 2 && ft_find_nb_of_arg(argv[1]) == 5 && general->nb_of_time == 0)
+		return (ERROR);
+	return (0);
+}
