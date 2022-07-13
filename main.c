@@ -33,11 +33,14 @@ void	*routine(void	*da)
 	//long int	time_death;
 	
 	philo = (t_philo *)da;
+
+	pthread_mutex_lock(philo->mutex);
 	start = philo->general->start;
-	printf("start = %ld\n", start);
+	pthread_mutex_unlock(philo->mutex);
+	//printf("start = %ld\n", start);
 	is_dead = 0;
 
-	printf("philo nb = %d\n", philo->philo_nb);
+	//printf("philo nb = %d\n", philo->philo_nb);
 	while (is_dead == 0)
 	{
 		//time_death = ft_get_time() + data->general->time_to_die;
@@ -88,7 +91,7 @@ void	ft_init_general(t_general *general, int argc, char **argv)
 	}
 }
 
-t_philo	*ft_init_philo_structs(t_general *general)
+t_philo	*ft_init_philo_structs(t_general *general, pthread_mutex_t	*mutex)
 {
 	t_philo				*bigdata;
 	t_philo				*philo;
@@ -112,6 +115,7 @@ t_philo	*ft_init_philo_structs(t_general *general)
 	while (++i < general->nb_of_philo)
 	{
 		philo->tab_mut = tab_mut;
+		philo->mutex = mutex;
 		philo->general = general;
 		philo->philo_nb = i;
 		philo++;	
@@ -148,33 +152,33 @@ int	main(int argc, char **argv)
 	int			i;
 	t_philo		*bigdata;
 	t_general	general;
-	pthread_mutex_t		*begin;
+	pthread_mutex_t		*mutex;
 
 	
 	if (ft_check_parsing(argc, argv) == ERROR)
 		return (0);
 
-	begin = malloc(sizeof(pthread_mutex_t) * 1);
-
+	mutex = malloc(sizeof(pthread_mutex_t) * 1);
+	if (pthread_mutex_init(mutex, NULL) != 0)
+		return (-1);
 	ft_init_general(&general, argc, argv);
-	bigdata = ft_init_philo_structs(&general);
+	bigdata = ft_init_philo_structs(&general, mutex);
 	if (!bigdata)
 		return (-1);
 	ft_init_philo_forks(bigdata);
-	if (pthread_mutex_init(begin, NULL) != 0)
-		return (-1);
+
 
 
 	i = -1;
-	pthread_mutex_lock(begin);
-	general.start = ft_get_time();
+	pthread_mutex_lock(mutex);
 	while (++i < general.nb_of_philo)
 	{
 		if (pthread_create(&bigdata[i].th, NULL, &routine, &bigdata[i])) //!= 0
 			return (1);
 		printf("Thread %d has started execution\n", bigdata[i].philo_nb);
 	}
-	pthread_mutex_unlock(begin);
+	general.start = ft_get_time();
+	pthread_mutex_unlock(mutex);
 
 	
 
@@ -191,8 +195,8 @@ int	main(int argc, char **argv)
 	{
 		pthread_mutex_destroy(&bigdata->tab_mut[i]);
 	}
-	pthread_mutex_destroy(begin);
-	free(begin);
+	pthread_mutex_destroy(mutex);
+	free(mutex);
 	free(bigdata->tab_mut);
 	free(bigdata);
 	return (0);

@@ -44,6 +44,7 @@ typedef struct s_philo
 {
 	pthread_t		th;
 	pthread_mutex_t	*tab_mut;
+	pthread_mutex_t	*mutex;
 	t_general		*general;
 	t_forks			forks;
 	int				philo_nb;
