@@ -137,7 +137,7 @@ void	ft_init_philo_forks(t_philo *bigdata)
 			philo->forks.l_fork = &philo->tab_mut[0];
 			philo->forks.r_fork = &philo->tab_mut[(philo->general->nb_of_philo) - 1];
 		}
-		else
+		else //les autres
 		{
 			philo->forks.l_fork = &philo->tab_mut[philo->philo_nb];
 			philo->forks.r_fork = &philo->tab_mut[(philo->philo_nb) - 1];
@@ -148,29 +148,26 @@ void	ft_init_philo_forks(t_philo *bigdata)
 
 int	main(int argc, char **argv)
 {
-	//pthread_t	*th;	//tableau avec 4 structures dedans
-	int			i;
-	t_philo		*bigdata;
-	t_general	general;
-	pthread_mutex_t		*mutex;
+	int				i;
+	t_philo			*bigdata;
+	t_general		general;
+	pthread_mutex_t	mutex;
 
 	
 	if (ft_check_parsing(argc, argv) == ERROR)
 		return (0);
 
-	mutex = malloc(sizeof(pthread_mutex_t) * 1);
-	if (pthread_mutex_init(mutex, NULL) != 0)
+	//mutex = malloc(sizeof(pthread_mutex_t) * 1);
+	if (pthread_mutex_init(&mutex, NULL) != 0)
 		return (-1);
 	ft_init_general(&general, argc, argv);
-	bigdata = ft_init_philo_structs(&general, mutex);
+	bigdata = ft_init_philo_structs(&general, &mutex);
 	if (!bigdata)
 		return (-1);
 	ft_init_philo_forks(bigdata);
 
-
-
 	i = -1;
-	pthread_mutex_lock(mutex);
+	pthread_mutex_lock(&mutex);
 	while (++i < general.nb_of_philo)
 	{
 		if (pthread_create(&bigdata[i].th, NULL, &routine, &bigdata[i])) //!= 0
@@ -178,10 +175,7 @@ int	main(int argc, char **argv)
 		printf("Thread %d has started execution\n", bigdata[i].philo_nb);
 	}
 	general.start = ft_get_time();
-	pthread_mutex_unlock(mutex); 
-
-	
-
+	pthread_mutex_unlock(&mutex); 
 
 	i = -1;
 	while (++i < general.nb_of_philo)
@@ -195,8 +189,7 @@ int	main(int argc, char **argv)
 	{
 		pthread_mutex_destroy(&bigdata->tab_mut[i]);
 	}
-	pthread_mutex_destroy(mutex);
-	free(mutex);
+	pthread_mutex_destroy(&mutex);
 	free(bigdata->tab_mut);
 	free(bigdata);
 	return (0);
