@@ -178,7 +178,7 @@ int	main(int argc, char **argv)
 		printf("Thread %d has started execution\n", bigdata[i].philo_nb);
 	}
 	general.start = ft_get_time();
-	pthread_mutex_unlock(mutex);
+	pthread_mutex_unlock(mutex); 
 
 	
 
