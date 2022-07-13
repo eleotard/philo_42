@@ -28,7 +28,7 @@ char	**ft_free_tab(char **tab)
 	return (NULL);
 }
 
-t_data	*free_rt_null(t_data *data)
+t_philo	*free_rt_null(t_philo *data)
 {
 	free(data);
 	return(NULL);

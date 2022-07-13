@@ -12,86 +12,62 @@
 
 #include "philo.h"
 
+long int ft_get_time()
+{
+	struct timeval	current_time;
+	long int		time;
+
+	gettimeofday(&current_time, NULL);
+	time = (current_time.tv_sec * 1000) + (current_time.tv_usec / 1000);
+  //printf("seconds : %ld\nmicro seconds : %ld", current_time.tv_sec, current_time.tv_usec);
+	//printf("time ds ft = %ld\n", time);
+	return (time);
+}
+
+
 void	*routine(void	*da)
 {
-	t_data	*data;
-	int	is_dead;
+	t_philo		*philo;
+	int			is_dead;
+	long int	start;
+	//long int	time_death;
 	
+	philo = (t_philo *)da;
+	start = philo->general->start;
+	printf("start = %ld\n", start);
 	is_dead = 0;
-	data = (t_data *)da;
-//	printf("philo nb = %d\n", data->philo_nb);
+
+	printf("philo nb = %d\n", philo->philo_nb);
 	while (is_dead == 0)
 	{
-		if ((data->philo_nb)%2 == 0)
+		//time_death = ft_get_time() + data->general->time_to_die;
+		
+		if ((philo->philo_nb)%2 == 1)
 			usleep(1000);
 		
-		if (data->philo_nb == 1)
-		{
-			pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));	
-			pthread_mutex_lock(&(data->tab_mut[(data->general->nb_of_philo) - 1]));
-			printf("philo %d is eating", data->philo_nb);
-			usleep((data->general->time_to_eat) * 1000);
-			pthread_mutex_unlock(&(data->tab_mut[(data->philo_nb) - 1]));	
-			pthread_mutex_unlock(&(data->tab_mut[(data->general->nb_of_philo) - 1]));
-		}
-		else if (data->philo_nb == data->general->nb_of_philo)
-		{
-			pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));	
-			pthread_mutex_lock(&(data->tab_mut[0]));
-			printf("philo %d is eating", data->philo_nb);
-			usleep((data->general->time_to_eat) * 1000);
-			pthread_mutex_unlock(&(data->tab_mut[(data->philo_nb) - 1]));	
-			pthread_mutex_unlock(&(data->tab_mut[(data->general->nb_of_philo) - 1]));			
-		}
-		else
-		{
-			if ((data->philo_nb)%2 == 1)
-			{
-				pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));
-				pthread_mutex_lock(&(data->tab_mut[data->philo_nb]));
-				usleep((data->general->time_to_eat) * 1000);
-				//printf()// nb de millisecondes en format depuis le lancement
-				pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));
-				pthread_mutex_unlock(&(data->general->mutex));
-			}
-			else if ((data->philo_nb)%2 == 0)
-			{
-				pthread_mutex_lock(&(data->tab_mut[data->philo_nb]));
-				pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));
-				printf("philo %d is eating", data->philo_nb);
-				usleep((data->general->time_to_eat) * 1000);
-				pthread_mutex_unlock(&(data->general->mutex));
-				pthread_mutex_lock(&(data->tab_mut[(data->philo_nb) - 1]));
-			}
-		}
-		
+		pthread_mutex_lock(philo->forks.l_fork);
+		pthread_mutex_lock(philo->forks.r_fork);
+		printf("%ld\t %d has taken a fork\n", (ft_get_time() - start), philo->philo_nb);
+		printf("%ld\t %d has taken a fork\n", (ft_get_time() - start), philo->philo_nb);
+		printf("%ld\t %d is eating\n", (ft_get_time() - start), philo->philo_nb);
+		usleep((philo->general->time_to_eat) * 1000);
+		printf("%ld\t %d has let down a fork\n", (ft_get_time() - start), philo->philo_nb);
+		printf("%ld\t %d has let down a fork\n", (ft_get_time() - start), philo->philo_nb);
+		pthread_mutex_unlock(philo->forks.l_fork);
+		pthread_mutex_unlock(philo->forks.r_fork);
+		printf("%ld\t %d is sleeping\n", (ft_get_time() - start), philo->philo_nb);
+		usleep((philo->general->time_to_sleep) * 1000);
+	
 	}
-	
-	//pthread_mutex_lock(&mutex);
-	//pthread_mutex_unlock(&mutex);
 
-	/*while (is_dead == 0)
-	{
-		
-		
-	}*/
 	
-	/*long int	i;
-	i = 0;
-	while (i < 1000000)
-	{
-		pthread_mutex_lock(&mutex);
-		mails++;
-		pthread_mutex_unlock(&mutex);
-		i++;
-	}*/
 	return (NULL);
 }
 
 void	ft_init_general(t_general *general, int argc, char **argv)
 {
 	char	**tab;
-	
+
 	if (argc == 2)
 	{
 		tab = ft_split(argv[1], ' ');
@@ -112,75 +88,112 @@ void	ft_init_general(t_general *general, int argc, char **argv)
 	}
 }
 
-t_data	*ft_init_philo_structs(t_general *general)
+t_philo	*ft_init_philo_structs(t_general *general)
 {
-	t_data		*data;
-	t_data		*buff;
-	int			*tab_mut;
-	int			i;
+	t_philo				*bigdata;
+	t_philo				*philo;
+	pthread_mutex_t		*tab_mut;
+	int					i;
 	
-	data = malloc(sizeof(t_data) * general->nb_of_philo);
-	if (!data)
+	bigdata = malloc(sizeof(t_philo) * general->nb_of_philo);
+	if (!bigdata)
 		return (NULL);
-	tab_mut = malloc(sizeof(int) * general->nb_of_philo);
+	tab_mut = malloc(sizeof(pthread_mutex_t) * general->nb_of_philo);
 	if (!tab_mut)
-		return (free_rt_null(data));
-	i = -1;
-	while (++i < general->nb_of_philo)
-		tab_mut[i] = 1;
-	buff = data;
+		return (free_rt_null(bigdata));
 	i = -1;
 	while (++i < general->nb_of_philo)
 	{
-		buff->tab_mut = tab_mut;
-		buff->general = general;
-		buff->philo_nb = i + 1;
-		buff++;	
+		if(pthread_mutex_init(&tab_mut[i], NULL) != 0)
+			return (NULL);
 	}
-	return (data);
+	philo = bigdata;
+	i = -1;
+	while (++i < general->nb_of_philo)
+	{
+		philo->tab_mut = tab_mut;
+		philo->general = general;
+		philo->philo_nb = i;
+		philo++;	
+	}
+	return (bigdata);
+}
+
+void	ft_init_philo_forks(t_philo *bigdata)
+{
+	t_philo	*philo;
+	int 	i;
+
+	i = -1;
+	philo = bigdata;
+	while (++i < bigdata->general->nb_of_philo)
+	{
+		if (philo->philo_nb == 0) //donc le premier
+		{
+			philo->forks.l_fork = &philo->tab_mut[0];
+			philo->forks.r_fork = &philo->tab_mut[(philo->general->nb_of_philo) - 1];
+		}
+		else
+		{
+			philo->forks.l_fork = &philo->tab_mut[philo->philo_nb];
+			philo->forks.r_fork = &philo->tab_mut[(philo->philo_nb) - 1];
+		}
+		philo++;
+	}
 }
 
 int	main(int argc, char **argv)
 {
 	//pthread_t	*th;	//tableau avec 4 structures dedans
 	int			i;
-	t_data		*data;
+	t_philo		*bigdata;
 	t_general	general;
-	pthread_mutex_t	mutex;
+	pthread_mutex_t		*begin;
 
 	
 	if (ft_check_parsing(argc, argv) == ERROR)
 		return (0);
-	
-	pthread_mutex_init(&mutex, NULL);
+
+	begin = malloc(sizeof(pthread_mutex_t) * 1);
+
 	ft_init_general(&general, argc, argv);
-	if (general.nb_of_philo == 0)
-		return (0);
-	data = ft_init_philo_structs(&general);
-	if (!data)
-		return (0);
+	bigdata = ft_init_philo_structs(&general);
+	if (!bigdata)
+		return (-1);
+	ft_init_philo_forks(bigdata);
+	if (pthread_mutex_init(begin, NULL) != 0)
+		return (-1);
+
+
 	i = -1;
-	while (++i < general.nb_of_philo)
-		pthread_mutex_init(&data->tab_mut[i], NULL);
-	i = -1;
+	pthread_mutex_lock(begin);
+	general.start = ft_get_time();
 	while (++i < general.nb_of_philo)
 	{
-		if (pthread_create(&data[i].th, NULL, &routine, &data[i])) //!= 0
+		if (pthread_create(&bigdata[i].th, NULL, &routine, &bigdata[i])) //!= 0
 			return (1);
-		printf("Thread %d has started execution\n", data[i].philo_nb);
+		printf("Thread %d has started execution\n", bigdata[i].philo_nb);
+	}
+	pthread_mutex_unlock(begin);
+
+	
+
+
+	i = -1;
+	while (++i < general.nb_of_philo)
+	{
+		if (pthread_join(bigdata[i].th, NULL) != 0) //attend que le thread soit termine pour quitter le programme
+			return (2);
+		printf("Thread %d has finished execution\n", bigdata[i].philo_nb);
 	}
 	i = -1;
 	while (++i < general.nb_of_philo)
 	{
-		if (pthread_join(data[i].th, NULL) != 0) //attend que le thread soit termine pour quitter le programme
-			return (2);
-		printf("Thread %d has finished execution\n", data[i].philo_nb);
+		pthread_mutex_destroy(&bigdata->tab_mut[i]);
 	}
-	free(data->tab_mut);
-	free(data);
-	i = -1;
-	while (++i < general.nb_of_philo)
-		pthread_mutex_destroy(&data->tab_mut[i]);
-	//printf("Number of mails: %ld\n", mails);
+	pthread_mutex_destroy(begin);
+	free(begin);
+	free(bigdata->tab_mut);
+	free(bigdata);
 	return (0);
 }

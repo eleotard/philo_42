@@ -24,7 +24,7 @@ CC = gcc
 
 RM = rm -rf
 
-FLAGS = -Wall -Wextra -Werror -pthread -g
+FLAGS = -Wall -Wextra -Werror -g
 
 LIBFT = -Llibft -lft
 
@@ -47,4 +47,4 @@ fclean: clean
 	${RM} ${NAME}
 	make -C libft fclean
 
-re: fclean all
+re: clean fclean all

@@ -30,18 +30,25 @@ typedef struct s_general
 	int	time_to_eat;
 	int	time_to_sleep;
 	int	nb_of_time;
-	pthread_mutex_t	mutex;
-	
+	long int	start;
 }	t_general;
 
-typedef struct s_data
+typedef struct s_forks
 {
-	pthread_t	th;
-	int			*tab_mut;
-	char		*argv;
-	t_general	*general;
-	int			philo_nb;
-}	t_data;
+	pthread_mutex_t *r_fork;
+	pthread_mutex_t	*l_fork;
+}	t_forks;
+
+
+typedef struct s_philo
+{
+	pthread_t		th;
+	pthread_mutex_t	*tab_mut;
+	t_general		*general;
+	t_forks			forks;
+	int				philo_nb;
+	int				tms;
+}	t_philo;
 
 typedef struct s_lst
 {
@@ -72,6 +79,6 @@ int	ft_check_arg_6(char **argv);
 
 /*FREE*/
 char	**ft_free_tab(char **tab);
-t_data	*free_rt_null(t_data *data);
+t_philo	*free_rt_null(t_philo *data);
 
 #endif
