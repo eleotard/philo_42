@@ -25,7 +25,7 @@ CC = gcc
 
 RM = rm -rf
 
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 
 LIBFT = -Llibft -lft
 

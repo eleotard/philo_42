@@ -22,10 +22,6 @@
 # include "libft/libft.h"
 
 # define ERROR	-1
-# define NUL	-2
-# define EAT	0
-# define SLEEP	1
-# define THINK	2
 # define DEAD	3
 
 typedef struct s_general
@@ -89,6 +85,7 @@ int	ft_check_correct_input(int argc, char **argv, t_general *general);
 /*FREE*/
 char	**ft_free_tab(char **tab);
 t_philo	*free_rt_null(t_philo *data);
+int		ft_free_all(t_philo *bigdata);
 
 /*UTILS*/
 int	ft_find_nb_of_arg(char *str);

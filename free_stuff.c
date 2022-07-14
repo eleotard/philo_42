@@ -33,3 +33,16 @@ t_philo	*free_rt_null(t_philo *data)
 	free(data);
 	return(NULL);
 }
+
+int ft_free_all(t_philo *bigdata)
+{
+	int	i;
+
+	i = -1;
+	while (++i < bigdata->general->nb_of_philo)		
+		pthread_mutex_destroy(&bigdata->tab_mut[i]);
+	pthread_mutex_destroy(bigdata->mutex);
+	free(bigdata->tab_mut);
+	free(bigdata);
+	return (-1);
+}
