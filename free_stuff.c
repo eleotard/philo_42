@@ -34,15 +34,21 @@ t_philo	*free_rt_null(t_philo *data)
 	return(NULL);
 }
 
-int ft_free_all(t_philo *bigdata)
+int ft_free_all(t_philo *bigdata, pthread_mutex_t *mutex)
 {
 	int	i;
 
+	/*i = -1;
+	while (++i < bigdata->general->nb_of_philo)		
+		pthread_mutex_unlock(&bigdata->tab_mut[i]);*/
 	i = -1;
+	pthread_mutex_lock(mutex);
 	while (++i < bigdata->general->nb_of_philo)		
 		pthread_mutex_destroy(&bigdata->tab_mut[i]);
-	pthread_mutex_destroy(bigdata->mutex);
+	pthread_mutex_unlock(bigdata->mutex);
+	//free(bigdata->mutex);
 	free(bigdata->tab_mut);
 	free(bigdata);
+	pthread_mutex_destroy(mutex);
 	return (-1);
 }
