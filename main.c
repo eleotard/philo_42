@@ -12,14 +12,54 @@
 
 #include "philo.h"
 
-long int ft_get_time()
+unsigned long long ft_get_time()
 {
-	struct timeval	current_time;
-	long int		time;
+	struct timeval			current_time;
+	unsigned long long		time;
 
 	gettimeofday(&current_time, NULL);
 	time = (current_time.tv_sec * 1000) + (current_time.tv_usec / 1000);
 	return (time);
+}
+
+/*void	ft_print_output2(t_philo *philo, char *str)
+{
+	pthread_mutex_lock(philo->can_print);
+	if (*philo->print == 1)
+	{
+		ft_putnbr_fd((int)(ft_get_time() - philo->general->start), 1);
+		write(1, " ", 1);
+		ft_putnbr_fd(philo->philo_nb + 1, 1);
+		write(1, " ", 1);
+		ft_putstr_fd(str, 1);
+	}
+	pthread_mutex_unlock(philo->can_print);
+}*/
+
+void	ft_print_output(t_philo *philo, char *str)
+{
+	pthread_mutex_lock(philo->can_print);
+	if (*philo->print == 1)
+	{
+		printf("%lld %d %s", (ft_get_time() - philo->general->start), philo->philo_nb + 1, str);
+	}
+	pthread_mutex_unlock(philo->can_print);
+}
+
+void	ft_sleep(unsigned long long ms)
+{
+	unsigned long long	curr_time;
+	unsigned long long	end_time;
+
+	curr_time = ft_get_time();
+	end_time = curr_time + ms;
+	while (1)
+	{
+		curr_time = ft_get_time();
+		if(curr_time >= end_time)
+			break;
+		usleep(100);
+	}
 }
 
 void	*routine(void	*da)
@@ -30,6 +70,8 @@ void	*routine(void	*da)
 	pthread_mutex_lock(philo->mutex);
 	pthread_mutex_unlock(philo->mutex);
 
+	if (philo->general->nb_of_philo % 2 == 0 && philo->philo_nb % 2 == 0)
+		ft_sleep(1);
 	while (1)
 	{
 		pthread_mutex_lock(philo->can_print);
@@ -40,43 +82,20 @@ void	*routine(void	*da)
 		}
 		pthread_mutex_unlock(philo->can_print);
 		pthread_mutex_lock(philo->forks.f_fork);
+		ft_print_output(philo, "has taken a fork\n");
 		pthread_mutex_lock(philo->forks.s_fork);
-		//printf("\t\ttruc = %ld\n", ft_get_time() - start - philo->last_meal);
-		/*pthread_mutex_lock(philo->can_print);
-		if (*philo->print == 1)
-		{
-			printf("%ld %d has taken a fork\n", (ft_get_time() - start), philo->philo_nb);
-			printf("%ld %d has taken a fork\n", (ft_get_time() - start), philo->philo_nb);
-		}
-		pthread_mutex_unlock(philo->can_print);*/
+		ft_print_output(philo, "has taken a fork\n");
 		pthread_mutex_lock(philo->mutex);
 		philo->last_meal = (ft_get_time() - philo->general->start);
-		//printf("philo %d last meal = %ld\n", philo->philo_nb, philo->last_meal);
+		//printf("\n\n\t\tphilo %d last meal = %lld\n\n", philo->philo_nb + 1, philo->last_meal);
 		pthread_mutex_unlock(philo->mutex);
-		pthread_mutex_lock(philo->can_print);
-		if (*philo->print == 1)
-			printf("%ld %d is eating\n", (ft_get_time() - philo->general->start), philo->philo_nb);
-		pthread_mutex_unlock(philo->can_print);
-		usleep((philo->general->time_to_eat) * 1000);
-		/*pthread_mutex_lock(philo->can_print);
-		if (*philo->print == 1)
-		{
-			printf("%ld\t %d has let down a fork\n", (ft_get_time() - start), philo->philo_nb);
-			printf("%ld\t %d has let down a fork\n", (ft_get_time() - start), philo->philo_nb);
-		}
-		pthread_mutex_unlock(philo->can_print);*/
+		ft_print_output(philo, "is eating\n");
+		ft_sleep(philo->general->time_to_eat);
 		pthread_mutex_unlock(philo->forks.f_fork);
 		pthread_mutex_unlock(philo->forks.s_fork);
-		pthread_mutex_lock(philo->can_print);
-		if (*philo->print == 1)
-			printf("%ld %d is sleeping\n", (ft_get_time() - philo->general->start), philo->philo_nb);
-		pthread_mutex_unlock(philo->can_print);
-		usleep((philo->general->time_to_sleep) * 1000);
-		pthread_mutex_lock(philo->can_print);
-		if (*philo->print == 1)
-			printf("%ld %d is thinking\n", (ft_get_time() - philo->general->start), philo->philo_nb);
-		pthread_mutex_unlock(philo->can_print);
-		//pthread_mutex_unlock(philo->can_print);
+		ft_print_output(philo, "is sleeping\n");
+		ft_sleep(philo->general->time_to_sleep);
+		ft_print_output(philo, "is thinking\n");
 	}	
 	return (NULL);
 }
@@ -186,9 +205,9 @@ void	ft_check_philo_states(t_philo *bigdata, pthread_mutex_t	*can_print)
 		{
 			pthread_mutex_lock(philo->mutex);
 			if (ft_get_time() - philo->general->start - philo->last_meal
-				>= philo->general->time_to_die)
+				> philo->general->time_to_die)
 			{
-				printf("checher ; %ld\n", ft_get_time() - philo->general->start - philo->last_meal);
+				printf("checher ; %lld\n", ft_get_time() - philo->general->start - philo->last_meal);
 				state = DEAD;
 				pthread_mutex_unlock(philo->mutex);
 				break ;
@@ -201,8 +220,10 @@ void	ft_check_philo_states(t_philo *bigdata, pthread_mutex_t	*can_print)
 			pthread_mutex_lock(can_print);
 			*philo->print = 0;
 			pthread_mutex_unlock(can_print);
-			printf("%ld %d is dead\n", (ft_get_time() - philo->general->start)
-				,philo->philo_nb);
+			pthread_mutex_lock(can_print);
+			printf("%lld %d is dead\n", (ft_get_time() - philo->general->start)
+				,philo->philo_nb + 1);
+			pthread_mutex_unlock(can_print);
 			//pthread_mutex_lock(can_print);
 			break ;
 		}
@@ -246,7 +267,7 @@ int	main(int argc, char **argv)
 	{
 		if (pthread_create(&bigdata[i].th, NULL, &routine, &bigdata[i])) //!= 0
 			return (ft_free_all(bigdata, &mutex));
-		printf("Thread %d has started execution\n", bigdata[i].philo_nb);
+		printf("Thread %d has started execution\n", bigdata[i].philo_nb + 1);
 	}
 	general.start = ft_get_time();
 	pthread_mutex_unlock(&mutex); 
@@ -258,7 +279,7 @@ int	main(int argc, char **argv)
 	{
 		if (pthread_join(bigdata[i].th, NULL) != 0) //attend que le thread soit termine pour quitter le programme
 			return (ft_free_all(bigdata, &mutex));
-		printf("Thread %d has finished execution\n", bigdata[i].philo_nb);
+		printf("Thread %d has finished execution\n", bigdata[i].philo_nb + 1);
 	}
 	ft_free_all(bigdata, &mutex);
 	//pthread_mutex_unlock(&can_print);

@@ -17,22 +17,25 @@
 # include <stdio.h>
 # include <stddef.h>
 # include <pthread.h>
+# include <unistd.h>
 # include <sys/time.h>
 
 # include "libft/libft.h"
 
 # define ERROR	-1
 # define EAT	1
+# define SLEEP	2
+# define THINK	4
 # define DEAD	3
 
 typedef struct s_general
 {
-	int	nb_of_philo;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	nb_of_time;
-	long int	start;
+	int					nb_of_philo;
+	unsigned long long	time_to_die;
+	unsigned long long	time_to_eat;
+	unsigned long long	time_to_sleep;
+	int					nb_of_time;
+	unsigned long long	start;
 }	t_general;
 
 typedef struct s_forks
@@ -51,7 +54,7 @@ typedef struct s_philo
 	int				*print;
 	t_general		*general;
 	t_forks			forks;
-	long int		last_meal;
+	unsigned long long	last_meal;
 	int				philo_nb;
 	int				state;
 }	t_philo;

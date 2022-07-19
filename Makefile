@@ -25,7 +25,7 @@ CC = gcc
 
 RM = rm -rf
 
-FLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+FLAGS = -O3 -Wall -Wextra -Werror  #-fsanitize=thread
 
 LIBFT = -Llibft -lft
 

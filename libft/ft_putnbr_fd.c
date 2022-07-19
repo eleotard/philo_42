@@ -15,9 +15,9 @@
 void	ft_putnbr_fd(int n, int fd)
 {
 	if (n == 0)
-		write(fd, "0", 1);
+		ft_putchar_fd('0', fd);
 	else if (n == -2147483648)
-		write(fd, "-2147483648", 11);
+		ft_putstr_fd("-2147483648", fd);
 	else if (n >= 0 && n < 10)
 		ft_putchar_fd(n + 48, fd);
 	else if (n < 0)
