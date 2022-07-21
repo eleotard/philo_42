@@ -6,7 +6,7 @@
 #    By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/07 17:44:44 by eleotard          #+#    #+#              #
-#    Updated: 2022/07/20 21:59:42 by eleotard         ###   ########.fr        #
+#    Updated: 2022/07/21 20:59:43 by eleotard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,10 @@ SRCS =	main.c \
 		ft_atoi_max.c 	\
 		free_stuff.c 	\
 		philo_utils.c 	\
+		actions.c \
+		init.c \
+		monitor.c \
+		time.c 	\
 
 OBJS = ${SRCS:%.c=%.o}
 
@@ -25,7 +29,7 @@ CC = gcc
 
 RM = rm -rf
 
-FLAGS = -g -O3 -pthread -Wall -Wextra  -fsanitize=thread
+FLAGS = -g -O3 -pthread -Wall -Wextra  #-fsanitize=thread
 
 LIBFT = -Llibft -lft
 

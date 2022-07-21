@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 16:06:47 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/20 21:50:35 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/21 20:47:18 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_philo	*free_rt_null(t_philo *data)
 	return(NULL);
 }
 
-int ft_free_all(t_philo *bigdata, pthread_mutex_t *mutex, pthread_mutex_t *can_print)
+int ft_free_all(t_philo *bigdata)
 {
 	int	i;
 
@@ -42,14 +42,22 @@ int ft_free_all(t_philo *bigdata, pthread_mutex_t *mutex, pthread_mutex_t *can_p
 	while (++i < bigdata->general->nb_of_philo)		
 		pthread_mutex_unlock(&bigdata->tab_mut[i]);*/
 	i = -1;
-	pthread_mutex_lock(mutex);
+	pthread_mutex_lock(bigdata->mut->m_start);
 	while (++i < bigdata->general->nb_of_philo)		
 		pthread_mutex_destroy(&bigdata->tab_mut[i]);
-	pthread_mutex_unlock(bigdata->mutex);
-	//free(bigdata->mutex);
+	pthread_mutex_unlock(bigdata->mut->m_start);
 	free(bigdata->tab_mut);
+	ft_destroy_free_mutexs(bigdata->mut);
 	free(bigdata);
-	pthread_mutex_destroy(can_print);
-	pthread_mutex_destroy(mutex);
 	return (-1);
+}
+
+void	ft_destroy_free_mutexs(t_mutex *mut)
+{
+	pthread_mutex_destroy(mut->can_print);
+	pthread_mutex_destroy(mut->m_start);
+	pthread_mutex_destroy(mut->m_meal);
+	free(mut->can_print);
+	free(mut->m_meal);
+	free(mut->m_start);
 }

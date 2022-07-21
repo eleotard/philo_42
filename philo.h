@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:24:47 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/09 19:52:25 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/21 20:44:44 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,18 @@ typedef struct s_forks
 }	t_forks;
 
 
+typedef struct s_mutex
+{
+	pthread_mutex_t *can_print;
+	pthread_mutex_t	*m_start;
+	pthread_mutex_t	*m_meal;
+}	t_mutex;
+
 typedef struct s_philo
 {
 	pthread_t		th;
 	pthread_mutex_t	*tab_mut;
-	pthread_mutex_t	*mutex;
-	pthread_mutex_t	*can_print;
+	t_mutex			*mut;
 	int				*print;
 	t_general		*general;
 	t_forks			forks;
@@ -90,9 +96,31 @@ int	ft_check_correct_input(int argc, char **argv, t_general *general);
 /*FREE*/
 char	**ft_free_tab(char **tab);
 t_philo	*free_rt_null(t_philo *data);
-int		ft_free_all(t_philo *bigdata, pthread_mutex_t *mutex);
+int		ft_free_all(t_philo *bigdata);
+void	ft_destroy_free_mutexs(t_mutex *mut);
 
 /*UTILS*/
 int	ft_find_nb_of_arg(char *str);
+
+/*ACTIONS*/
+void	ft_eat(t_philo *philo);
+void	ft_sleep(t_philo *philo);
+
+/*INIT*/
+void	ft_init_general(t_general *general, int argc, char **argv);
+t_mutex	*ft_init_mutex_struct(t_mutex *mut);
+t_philo	*ft_init_philo_structs(t_general *general, t_mutex	*mutex, int *print);
+void	ft_init_philo_forks(t_philo *bigdata);
+
+/*PRINT*/
+void	ft_print_output(t_philo *philo, char *str);
+
+/*TIME*/
+unsigned long long ft_get_time();
+unsigned long long ft_get_time_micro();
+void				ft_myusleep(t_philo *philo, unsigned long long ms);
+
+/*MONITOR*/
+void	ft_check_philo_states(t_philo *bigdata);
 
 #endif
