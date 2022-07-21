@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 16:06:47 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/08 19:00:03 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/20 21:50:35 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_philo	*free_rt_null(t_philo *data)
 	return(NULL);
 }
 
-int ft_free_all(t_philo *bigdata, pthread_mutex_t *mutex)
+int ft_free_all(t_philo *bigdata, pthread_mutex_t *mutex, pthread_mutex_t *can_print)
 {
 	int	i;
 
@@ -49,6 +49,7 @@ int ft_free_all(t_philo *bigdata, pthread_mutex_t *mutex)
 	//free(bigdata->mutex);
 	free(bigdata->tab_mut);
 	free(bigdata);
+	pthread_mutex_destroy(can_print);
 	pthread_mutex_destroy(mutex);
 	return (-1);
 }

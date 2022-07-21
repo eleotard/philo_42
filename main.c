@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 02:19:03 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/09 21:01:28 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/20 21:59:06 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,48 @@ void	ft_print_output(t_philo *philo, char *str)
 	pthread_mutex_unlock(philo->can_print);
 }
 
-void	ft_sleep(unsigned long long ms)
+/*void	ft_sleep(t_philo *philo, unsigned long long ms)
+{
+	unsigned long long	curr_time;
+	unsigned long long	start_time;
+	
+	curr_time = ft_get_time() - philo->general->start;
+	start_time = curr_time;
+	//printf("\t\t\tcur time %lld\n", curr_time);
+	while ((curr_time - start_time) <= ms)
+	{
+		usleep(100);
+		curr_time = ft_get_time() - philo->general->start;
+	}
+}*/
+void	ft_sleep(t_philo *philo, unsigned long long ms)
+{
+	unsigned long long	curr_time;
+	// unsigned long long	start_time;
+	unsigned long long	start;
+
+	start = ft_get_time();
+	//curr_time = ft_get_time() - philo->general->start;
+	//start_time = curr_time;
+	//printf("\t\t\tcur time %lld\n", curr_time);
+	while (1)
+	{
+		curr_time = ft_get_time() - start;
+		if (curr_time >= ms)
+			break ;
+		if (ms - curr_time < 100)
+			usleep((ms - curr_time) / 10);
+		else
+			usleep(100);
+		curr_time = ft_get_time() - start;
+	}
+}
+/*void	ft_sleep2(unsigned long long ms)
 {
 	unsigned long long	curr_time;
 	unsigned long long	end_time;
 
-	curr_time = ft_get_time();
+	curr_time = ft_get_time() - philo->general->start;
 	end_time = curr_time + ms;
 	while (1)
 	{
@@ -60,6 +96,18 @@ void	ft_sleep(unsigned long long ms)
 			break;
 		usleep(100);
 	}
+}*/
+
+int	ft_check_print(t_philo *philo)
+{
+	pthread_mutex_lock(philo->can_print);
+	if (*philo->print == 0)
+	{
+		pthread_mutex_unlock(philo->can_print);
+		return (1);
+	}
+	pthread_mutex_unlock(philo->can_print);
+	return (0);
 }
 
 void	*routine(void	*da)
@@ -70,17 +118,10 @@ void	*routine(void	*da)
 	pthread_mutex_lock(philo->mutex);
 	pthread_mutex_unlock(philo->mutex);
 
-	if (philo->general->nb_of_philo % 2 == 0 && philo->philo_nb % 2 == 0)
-		ft_sleep(1);
-	while (1)
+	if (((philo->general->nb_of_philo) % 2 == 0) && ((philo->philo_nb % 2) == 0))
+		ft_sleep(philo, philo->general->time_to_eat / 10);
+	while (ft_check_print(philo) == 0)
 	{
-		pthread_mutex_lock(philo->can_print);
-		if (*philo->print == 0)
-		{
-			pthread_mutex_unlock(philo->can_print);
-			break ;
-		}
-		pthread_mutex_unlock(philo->can_print);
 		pthread_mutex_lock(philo->forks.f_fork);
 		ft_print_output(philo, "has taken a fork\n");
 		pthread_mutex_lock(philo->forks.s_fork);
@@ -90,11 +131,13 @@ void	*routine(void	*da)
 		//printf("\n\n\t\tphilo %d last meal = %lld\n\n", philo->philo_nb + 1, philo->last_meal);
 		pthread_mutex_unlock(philo->mutex);
 		ft_print_output(philo, "is eating\n");
-		ft_sleep(philo->general->time_to_eat);
+		ft_sleep(philo, philo->general->time_to_eat);
+		//ft_sleep(philo, philo->general->time_to_eat);
 		pthread_mutex_unlock(philo->forks.f_fork);
 		pthread_mutex_unlock(philo->forks.s_fork);
 		ft_print_output(philo, "is sleeping\n");
-		ft_sleep(philo->general->time_to_sleep);
+		ft_sleep(philo, philo->general->time_to_sleep);
+		//ft_sleep(philo, philo->general->time_to_sleep);
 		ft_print_output(philo, "is thinking\n");
 	}	
 	return (NULL);
@@ -155,6 +198,8 @@ t_philo	*ft_init_philo_structs(t_general *general, pthread_mutex_t	*mutex, int *
 		philo->philo_nb = i;
 		philo->last_meal = 0;
 		philo->state = 0;
+		philo->curr_time = 0;
+		philo->end_time = 0;
 		philo++;
 	}
 	return (bigdata);
@@ -207,7 +252,7 @@ void	ft_check_philo_states(t_philo *bigdata, pthread_mutex_t	*can_print)
 			if (ft_get_time() - philo->general->start - philo->last_meal
 				> philo->general->time_to_die)
 			{
-				printf("checher ; %lld\n", ft_get_time() - philo->general->start - philo->last_meal);
+				//printf("checher ; %lld\n", ft_get_time() - philo->general->start - philo->last_meal);
 				state = DEAD;
 				pthread_mutex_unlock(philo->mutex);
 				break ;
@@ -219,14 +264,13 @@ void	ft_check_philo_states(t_philo *bigdata, pthread_mutex_t	*can_print)
 		{
 			pthread_mutex_lock(can_print);
 			*philo->print = 0;
-			pthread_mutex_unlock(can_print);
-			pthread_mutex_lock(can_print);
 			printf("%lld %d is dead\n", (ft_get_time() - philo->general->start)
 				,philo->philo_nb + 1);
 			pthread_mutex_unlock(can_print);
 			//pthread_mutex_lock(can_print);
 			break ;
 		}
+		usleep(8000);
 	}
 }
 
@@ -238,7 +282,6 @@ int	main(int argc, char **argv)
 	t_general		general;
 	pthread_mutex_t	mutex;
 	pthread_mutex_t	can_print;
-
 
 	print = 1;
 	if (ft_check_parsing(argc, argv) == ERROR)
@@ -266,7 +309,7 @@ int	main(int argc, char **argv)
 	while (++i < general.nb_of_philo)
 	{
 		if (pthread_create(&bigdata[i].th, NULL, &routine, &bigdata[i])) //!= 0
-			return (ft_free_all(bigdata, &mutex));
+			return (ft_free_all(bigdata, &mutex, &can_print));
 		printf("Thread %d has started execution\n", bigdata[i].philo_nb + 1);
 	}
 	general.start = ft_get_time();
@@ -278,11 +321,11 @@ int	main(int argc, char **argv)
 	while (++i < general.nb_of_philo)
 	{
 		if (pthread_join(bigdata[i].th, NULL) != 0) //attend que le thread soit termine pour quitter le programme
-			return (ft_free_all(bigdata, &mutex));
+			return (ft_free_all(bigdata, &mutex, &can_print));
 		printf("Thread %d has finished execution\n", bigdata[i].philo_nb + 1);
 	}
-	ft_free_all(bigdata, &mutex);
+	ft_free_all(bigdata, &mutex, &can_print);
 	//pthread_mutex_unlock(&can_print);
-	pthread_mutex_destroy(&can_print);
+
 	return (0);
 }

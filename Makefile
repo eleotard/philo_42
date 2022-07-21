@@ -6,7 +6,7 @@
 #    By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/07 17:44:44 by eleotard          #+#    #+#              #
-#    Updated: 2022/07/09 18:13:45 by eleotard         ###   ########.fr        #
+#    Updated: 2022/07/20 21:59:42 by eleotard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ CC = gcc
 
 RM = rm -rf
 
-FLAGS = -O3 -Wall -Wextra -Werror  #-fsanitize=thread
+FLAGS = -g -O3 -pthread -Wall -Wextra  -fsanitize=thread
 
 LIBFT = -Llibft -lft
 
