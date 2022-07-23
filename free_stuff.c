@@ -34,7 +34,7 @@ t_philo	*free_rt_null(t_philo *data)
 	return(NULL);
 }
 
-void	*free_rt_null_mut(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal)
+void	*free_rt_null_mut(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal, pthread_mutex_t *m_start_2)
 {
 	if (m_start)
 		free (m_start);
@@ -42,6 +42,8 @@ void	*free_rt_null_mut(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pth
 		free(can_print);
 	if (m_meal)
 		free (m_meal);
+	if (m_start_2)
+		free (m_start_2);
 	return (NULL);
 }
 

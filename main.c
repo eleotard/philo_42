@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 02:19:03 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/23 20:34:13 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/23 22:22:33 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,10 @@ void	ft_myusleep(t_philo *philo, unsigned long long ms)
 	while (curr_time <= ms)
 	{
 		curr_time = ft_get_time_micro() - start;
-		/*if (ms - curr_time < 100)
+		if (ms - curr_time < 100)
 			usleep((ms - curr_time) /10);
-		else*/
-		if (usleep(1) == -1)
-			return ;
+		else
+			usleep(100);
 		curr_time = ft_get_time_micro() - start;
 	}
 	unsigned long long temps_fin = ft_get_time();
@@ -148,10 +147,18 @@ void	*routine(void	*da)
 	t_philo		*philo;
 	
 	philo = (t_philo *)da;
-	pthread_mutex_lock(philo->mut->m_start);
-	pthread_mutex_unlock(philo->mut->m_start);
+	if (((philo->philo_nb + 1) % 2) == 0)
+	{
+		pthread_mutex_lock(philo->mut->m_start);
+		pthread_mutex_unlock(philo->mut->m_start);
+	}
+	else
+	{
+		pthread_mutex_lock(philo->mut->m_start_2);
+		pthread_mutex_unlock(philo->mut->m_start_2);
+	}
 	
-	if (((philo->general->nb_of_philo) % 2 == 0) && ((philo->philo_nb % 2) == 0))
+	if (((philo->general->nb_of_philo) % 2 == 0) && (((philo->philo_nb + 1) % 2) == 0))
 		ft_myusleep(philo, (philo->general->time_to_eat / 10));
 	while (ft_check_print(philo) == 0)
 	{
@@ -189,6 +196,7 @@ int	main(int argc, char **argv)
 
 	
 	i = -1;
+	pthread_mutex_lock(bigdata->mut->m_start_2);
 	pthread_mutex_lock(bigdata->mut->m_start);
 	while (++i < general.nb_of_philo)
 	{
@@ -197,7 +205,8 @@ int	main(int argc, char **argv)
 		printf("Thread %d has started execution\n", bigdata[i].philo_nb + 1);
 	}
 	general.start = ft_get_time();
-	pthread_mutex_unlock(bigdata->mut->m_start); 
+	pthread_mutex_unlock(bigdata->mut->m_start);
+	pthread_mutex_unlock(bigdata->mut->m_start_2); 
 
 
 

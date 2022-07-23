@@ -17,27 +17,34 @@ void	*ft_destroy_free_mutexs(t_mutex *mut)
 	pthread_mutex_destroy(mut->can_print);
 	pthread_mutex_destroy(mut->m_start);
 	pthread_mutex_destroy(mut->m_meal);
+	pthread_mutex_destroy(mut->m_start_2);
 	free(mut->can_print);
 	free(mut->m_meal);
 	free(mut->m_start);
+	free(mut->m_start_2);
 	return (NULL);
 }
 
-void	*ft_destroy_free_mutexs_2(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal)
+void	*ft_destroy_free_mutexs_2(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal, pthread_mutex_t *m_start_2)
 {
-	if (m_meal)
+	if (m_start)
 	{
-		free(m_meal);
+		free(m_start);
 	}
 	if (can_print)
 	{
-		pthread_mutex_destroy(m_meal);
+		pthread_mutex_destroy(m_start);
 		free(can_print);
 	}
-	if (m_start)
+	if (m_meal)
 	{
 		pthread_mutex_destroy(can_print);
-		free(m_start);
+		free(m_meal);
+	}
+		if (m_start_2)
+	{
+		pthread_mutex_destroy(m_meal);
+		free(m_start_2);
 	}
 	return (NULL);
 }

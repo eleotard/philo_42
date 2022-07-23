@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:24:47 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/23 20:31:30 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/23 22:08:55 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_mutex
 {
 	pthread_mutex_t *can_print;
 	pthread_mutex_t	*m_start;
+	pthread_mutex_t	*m_start_2;
 	pthread_mutex_t	*m_meal;
 }	t_mutex;
 
@@ -95,10 +96,10 @@ int	ft_check_correct_input(int argc, char **argv, t_general *general);
 /*FREE*/
 char	**ft_free_tab(char **tab);
 t_philo	*free_rt_null(t_philo *data);
-void	*free_rt_null_mut(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal);
+void	*free_rt_null_mut(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal, pthread_mutex_t *m_start_2);
 int		ft_free_all(t_philo *bigdata);
 void	*ft_destroy_free_mutexs(t_mutex *mut);
-void	*ft_destroy_free_mutexs_2(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal);
+void	*ft_destroy_free_mutexs_2(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal, pthread_mutex_t *m_start_2);
 void	*free_destroy_tabmut(pthread_mutex_t *tab_mut, int k);
 void	*ft_destroy_all_mutexs(pthread_mutex_t *tab_mut, int k, t_mutex *mut);
 
