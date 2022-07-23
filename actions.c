@@ -34,3 +34,20 @@ void	ft_sleep(t_philo *philo)
 	ft_print_output(philo, "is sleeping\n");
 	ft_myusleep(philo, philo->general->time_to_sleep);
 }
+
+void	ft_think(t_philo *philo)
+{
+	unsigned long long	time_to_think;
+
+	if (((philo->general->nb_of_philo) % 2) == 0)
+	{
+		time_to_think = 0;
+		ft_print_output(philo, "is thinking\n");
+	}
+	else
+	{
+		time_to_think = (1 * (1 / 8)) * (philo->general->time_to_eat);
+		ft_print_output(philo, "is thinking\n");
+		ft_myusleep(philo, time_to_think);
+	}
+}

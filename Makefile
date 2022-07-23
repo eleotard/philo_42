@@ -12,16 +12,17 @@
 
 NAME = philo
 
-SRCS =	main.c \
-		check_parsing.c \
-		check_parsing2.c \
-		ft_atoi_max.c 	\
-		free_stuff.c 	\
-		philo_utils.c 	\
-		actions.c \
-		init.c \
-		monitor.c \
-		time.c 	\
+SRCS =	main.c 				\
+		check_parsing.c 	\
+		check_parsing2.c	\
+		ft_atoi_max.c 		\
+		free_stuff.c 		\
+		free_mutex.c 		\
+		philo_utils.c 		\
+		actions.c 			\
+		init.c				\
+		monitor.c			\
+		time.c				\
 
 OBJS = ${SRCS:%.c=%.o}
 

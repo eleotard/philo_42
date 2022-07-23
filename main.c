@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 02:19:03 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/21 21:05:00 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/23 20:34:13 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	*routine(void	*da)
 	{
 		ft_eat(philo);
 		ft_sleep(philo);
-		ft_print_output(philo, "is thinking\n");
+		ft_think(philo);
 	}	
 	return (NULL);
 }
@@ -181,14 +181,10 @@ int	main(int argc, char **argv)
 		return (-1);
 	if (ft_init_mutex_struct(&i_mut) == NULL)
 		return (-1);
-	
 	bigdata = ft_init_philo_structs(&general, &i_mut, &print);
 	if (!bigdata)
-	{
-		ft_destroy_free_mutexs(&i_mut);
 		return (-1);
-	}
-	ft_init_philo_forks(bigdata);
+	ft_attribute_philo_forks(bigdata);
 	
 
 	
@@ -197,7 +193,7 @@ int	main(int argc, char **argv)
 	while (++i < general.nb_of_philo)
 	{
 		if (pthread_create(&bigdata[i].th, NULL, &routine, &bigdata[i])) //!= 0
-			return (ft_free_all(bigdata));
+			return (ft_free_all(bigdata)); //attention c'est pas si simple malheureusement
 		printf("Thread %d has started execution\n", bigdata[i].philo_nb + 1);
 	}
 	general.start = ft_get_time();

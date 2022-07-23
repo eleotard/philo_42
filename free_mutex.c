@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_stuff.c                                       :+:      :+:    :+:   */
+/*   free_mutex.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,50 +12,51 @@
 
 #include "philo.h"
 
-char	**ft_free_tab(char **tab)
+void	*ft_destroy_free_mutexs(t_mutex *mut)
 {
-	int	k;
+	pthread_mutex_destroy(mut->can_print);
+	pthread_mutex_destroy(mut->m_start);
+	pthread_mutex_destroy(mut->m_meal);
+	free(mut->can_print);
+	free(mut->m_meal);
+	free(mut->m_start);
+	return (NULL);
+}
 
-	k = 0;
-	while (tab[k])
-		k++;
+void	*ft_destroy_free_mutexs_2(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal)
+{
+	if (m_meal)
+	{
+		free(m_meal);
+	}
+	if (can_print)
+	{
+		pthread_mutex_destroy(m_meal);
+		free(can_print);
+	}
+	if (m_start)
+	{
+		pthread_mutex_destroy(can_print);
+		free(m_start);
+	}
+	return (NULL);
+}
+
+void	*free_destroy_tabmut(pthread_mutex_t *tab_mut, int k)
+{
+	k--;
 	while (k >= 0)
 	{
-		free(tab[k]);
+		pthread_mutex_destroy(&tab_mut[k]);
 		k--;
 	}
-	free(tab);
+	free (tab_mut);
 	return (NULL);
 }
 
-t_philo	*free_rt_null(t_philo *data)
+void	*ft_destroy_all_mutexs(pthread_mutex_t *tab_mut, int k, t_mutex *mut)
 {
-	free(data);
-	return(NULL);
-}
-
-void	*free_rt_null_mut(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal)
-{
-	if (m_start)
-		free (m_start);
-	if (can_print)
-		free(can_print);
-	if (m_meal)
-		free (m_meal);
+	free_destroy_tabmut(tab_mut, k);
+	ft_destroy_free_mutexs(mut);
 	return (NULL);
-}
-
-int ft_free_all(t_philo *bigdata)
-{
-	int	i;
-
-	i = -1;
-	pthread_mutex_lock(bigdata->mut->m_start);
-	while (++i < bigdata->general->nb_of_philo)		
-		pthread_mutex_destroy(&bigdata->tab_mut[i]);
-	pthread_mutex_unlock(bigdata->mut->m_start);
-	free(bigdata->tab_mut);
-	ft_destroy_free_mutexs(bigdata->mut);
-	free(bigdata);
-	return (-1);
 }

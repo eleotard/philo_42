@@ -6,11 +6,28 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 17:06:42 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/21 20:46:31 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/23 20:29:54 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+pthread_mutex_t	*ft_init_mut_tab(t_general *general)
+{
+	int				i;
+	pthread_mutex_t	*tab_mut;
+
+	tab_mut = malloc(sizeof(pthread_mutex_t) * general->nb_of_philo);
+	if (!tab_mut)
+		return (NULL);
+	i = -1;
+	while (++i < general->nb_of_philo)
+	{
+		if (pthread_mutex_init(&tab_mut[i], NULL) != 0)
+			return (free_destroy_tabmut(tab_mut, i));
+	}
+	return (tab_mut);
+}
 
 t_philo	*ft_init_philo_structs(t_general *general, t_mutex *mut, int *print)
 {
@@ -18,19 +35,13 @@ t_philo	*ft_init_philo_structs(t_general *general, t_mutex *mut, int *print)
 	t_philo				*philo;
 	pthread_mutex_t		*tab_mut;
 	int					i;
-	
+
+	tab_mut = ft_init_mut_tab(general);
+	if (!tab_mut)
+		return (ft_destroy_free_mutexs(mut));
 	bigdata = malloc(sizeof(t_philo) * general->nb_of_philo);
 	if (!bigdata)
-		return (NULL);
-	tab_mut = malloc(sizeof(pthread_mutex_t) * general->nb_of_philo);
-	if (!tab_mut)
-		return (free_rt_null(bigdata));
-	i = -1;
-	while (++i < general->nb_of_philo)
-	{
-		if(pthread_mutex_init(&tab_mut[i], NULL) != 0)
-			return (NULL);
-	}
+		return (ft_destroy_all_mutexs(tab_mut, general->nb_of_philo, mut));
 	philo = bigdata;
 	i = -1;
 	while (++i < general->nb_of_philo)
@@ -41,7 +52,6 @@ t_philo	*ft_init_philo_structs(t_general *general, t_mutex *mut, int *print)
 		philo->general = general;
 		philo->philo_nb = i;
 		philo->last_meal = 0;
-		philo->state = 0;
 		philo++;
 	}
 	return (bigdata);
@@ -54,35 +64,33 @@ t_mutex	*ft_init_mutex_struct(t_mutex *mut)
 	pthread_mutex_t	*m_meal;
 
 	m_start = malloc(sizeof(pthread_mutex_t));
-	if(!m_start)
+	if (!m_start)
 		return (NULL);
 	can_print = malloc(sizeof(pthread_mutex_t));
-	if(!can_print)
-		return (NULL);
+	if (!can_print)
+		return (free_rt_null_mut(m_start, NULL, NULL));
 	m_meal = malloc(sizeof(pthread_mutex_t));
-	if(!m_meal)
-		return (NULL);
+	if (!m_meal)
+		return (free_rt_null_mut(m_start, can_print, NULL));
 	if (pthread_mutex_init(m_start, NULL) != 0)
-		return (NULL);
+		return (free_rt_null_mut(m_start, NULL, NULL));
 	if (pthread_mutex_init(can_print, NULL) != 0)
-		return (NULL);
+		return (ft_destroy_free_mutexs_2(m_start, can_print, NULL));
 	if (pthread_mutex_init(m_meal, NULL) != 0)
-		return (NULL);
-	
+		return (ft_destroy_free_mutexs_2(m_start, can_print, m_meal));
 	mut->can_print = can_print;
 	mut->m_meal = m_meal;
 	mut->m_start = m_start;
 	return (mut);
 }
 
-void	ft_init_philo_forks(t_philo *bigdata)
+void	ft_attribute_philo_forks(t_philo *bigdata)
 {
 	t_philo	*philo;
-	int 	i;
+	int		i;
 
 	i = -1;
 	philo = bigdata;
-
 	while (++i < bigdata->general->nb_of_philo)
 	{
 		if (philo->philo_nb == 0) //donc le premier
