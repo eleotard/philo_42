@@ -6,7 +6,7 @@
 #    By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/07 17:44:44 by eleotard          #+#    #+#              #
-#    Updated: 2022/07/24 18:41:07 by eleotard         ###   ########.fr        #
+#    Updated: 2022/07/24 23:41:40 by eleotard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ NAME = philo
 SRCS =	main.c 				\
 		check_parsing.c 	\
 		check_parsing2.c	\
+		check_input.c 		\
 		ft_atoi_max.c 		\
 		free_stuff.c 		\
 		free_mutex.c 		\
@@ -23,6 +24,8 @@ SRCS =	main.c 				\
 		init.c				\
 		monitor.c			\
 		time.c				\
+		error_thread.c 		\
+		threads.c 			\
 
 OBJS = ${SRCS:%.c=%.o}
 

@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 17:09:52 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/24 19:13:45 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/24 23:56:56 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 void	ft_check_philo_states(t_philo *bigdata)
 {
 	int		i;
-	t_philo *philo;
-	int 	state;
+	int		state;
+	t_philo	*philo;
 
 	state = 0;
 	while (1)
@@ -41,8 +41,8 @@ void	ft_check_philo_states(t_philo *bigdata)
 		{
 			pthread_mutex_lock(&philo->mut->can_print);
 			*philo->print = 0;
-			printf("%lld %d is dead\n", (ft_get_time() - philo->general->start)
-				,philo->philo_nb + 1);
+			printf("%lld %d is dead\n", (ft_get_time() - philo->general->start),
+				philo->philo_nb + 1);
 			pthread_mutex_unlock(&philo->mut->can_print);
 			break ;
 		}

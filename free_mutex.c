@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 16:06:47 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/24 19:14:47 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/24 23:52:52 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ void	*ft_destroy_mutexs(t_mutex *mut)
 	return (NULL);
 }
 
-void	*ft_destroy_mutexs_2(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal, pthread_mutex_t *m_start_2)
+void	*ft_destroy_mutexs_2(pthread_mutex_t *m_start,
+			pthread_mutex_t *can_print, pthread_mutex_t *m_meal,
+			pthread_mutex_t *m_start_2)
 {
 	if (can_print)
 		pthread_mutex_destroy(m_start);
