@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 17:06:42 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/23 22:10:16 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/24 19:14:08 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_philo	*ft_init_philo_structs(t_general *general, t_mutex *mut, int *print)
 
 	tab_mut = ft_init_mut_tab(general);
 	if (!tab_mut)
-		return (ft_destroy_free_mutexs(mut));
+		return (ft_destroy_mutexs(mut));
 	bigdata = malloc(sizeof(t_philo) * general->nb_of_philo);
 	if (!bigdata)
 		return (ft_destroy_all_mutexs(tab_mut, general->nb_of_philo, mut));
@@ -85,38 +85,17 @@ t_philo	*ft_init_philo_structs(t_general *general, t_mutex *mut, int *print)
 	return (bigdata);
 }
 
-t_mutex	*ft_init_mutex_struct(t_mutex *mut)
+int	ft_init_mutex_struct(t_mutex *mut)
 {
-	pthread_mutex_t	*m_start;
-	pthread_mutex_t	*m_start_2;
-	pthread_mutex_t	*can_print;
-	pthread_mutex_t	*m_meal;
-
-	m_start = malloc(sizeof(pthread_mutex_t));
-	if (!m_start)
-		return (NULL);
-	can_print = malloc(sizeof(pthread_mutex_t));
-	if (!can_print)
-		return (free_rt_null_mut(m_start, NULL, NULL, NULL));
-	m_meal = malloc(sizeof(pthread_mutex_t));
-	if (!m_meal)
-		return (free_rt_null_mut(m_start, can_print, NULL, NULL));
-	m_start_2 = malloc(sizeof(pthread_mutex_t));
-	if (!m_start_2)
-		return (free_rt_null_mut(m_start, can_print, m_meal, NULL));
-	if (pthread_mutex_init(m_start, NULL) != 0)
-		return (ft_destroy_free_mutexs_2(m_start, NULL, NULL, NULL));
-	if (pthread_mutex_init(can_print, NULL) != 0)
-		return (ft_destroy_free_mutexs_2(m_start, can_print, NULL, NULL));
-	if (pthread_mutex_init(m_meal, NULL) != 0)
-		return (ft_destroy_free_mutexs_2(m_start, can_print, m_meal, NULL));
-	if (pthread_mutex_init(m_start_2, NULL) != 0)
-		return (ft_destroy_free_mutexs_2(m_start, can_print, m_meal, m_start_2));
-	mut->can_print = can_print;
-	mut->m_meal = m_meal;
-	mut->m_start = m_start;
-	mut->m_start_2 = m_start_2;
-	return (mut);
+	if (pthread_mutex_init(&mut->m_start, NULL) != 0)
+		return (ERROR);
+	if (pthread_mutex_init(&mut->can_print, NULL) != 0)
+		return (ft_destroy_mutexs_2(&mut->m_start, &mut->can_print, NULL, NULL), ERROR);
+	if (pthread_mutex_init(&mut->m_meal, NULL) != 0)
+		return (ft_destroy_mutexs_2(&mut->m_start, &mut->can_print, &mut->m_meal, NULL), ERROR);
+	if (pthread_mutex_init(&mut->m_start_2, NULL) != 0)
+		return (ft_destroy_mutexs_2(&mut->m_start, &mut->can_print, &mut->m_meal, &mut->m_start_2), ERROR);
+	return (0);
 }
 
 void	ft_init_general(t_general *general, int argc, char **argv)

@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:24:47 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/23 22:08:55 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/24 19:06:46 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ typedef struct s_forks
 
 typedef struct s_mutex
 {
-	pthread_mutex_t *can_print;
-	pthread_mutex_t	*m_start;
-	pthread_mutex_t	*m_start_2;
-	pthread_mutex_t	*m_meal;
+	pthread_mutex_t can_print;
+	pthread_mutex_t	m_start;
+	pthread_mutex_t	m_start_2;
+	pthread_mutex_t	m_meal;
 }	t_mutex;
 
 typedef struct s_philo
@@ -96,10 +96,9 @@ int	ft_check_correct_input(int argc, char **argv, t_general *general);
 /*FREE*/
 char	**ft_free_tab(char **tab);
 t_philo	*free_rt_null(t_philo *data);
-void	*free_rt_null_mut(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal, pthread_mutex_t *m_start_2);
 int		ft_free_all(t_philo *bigdata);
-void	*ft_destroy_free_mutexs(t_mutex *mut);
-void	*ft_destroy_free_mutexs_2(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal, pthread_mutex_t *m_start_2);
+void	*ft_destroy_mutexs(t_mutex *mut);
+void	*ft_destroy_mutexs_2(pthread_mutex_t *m_start, pthread_mutex_t *can_print, pthread_mutex_t *m_meal, pthread_mutex_t *m_start_2);
 void	*free_destroy_tabmut(pthread_mutex_t *tab_mut, int k);
 void	*ft_destroy_all_mutexs(pthread_mutex_t *tab_mut, int k, t_mutex *mut);
 
@@ -114,7 +113,7 @@ void	ft_think(t_philo *philo);
 
 /*INIT*/
 void			ft_init_general(t_general *general, int argc, char **argv);
-t_mutex			*ft_init_mutex_struct(t_mutex *mut);
+int				ft_init_mutex_struct(t_mutex *mut);
 t_philo			*ft_init_philo_structs(t_general *general, t_mutex	*mutex, int *print);
 pthread_mutex_t	*ft_init_mut_tab(t_general *general);
 void			ft_attribute_philo_forks(t_philo *bigdata);
@@ -123,8 +122,8 @@ void			ft_attribute_philo_forks(t_philo *bigdata);
 void	ft_print_output(t_philo *philo, char *str);
 
 /*TIME*/
-unsigned long long ft_get_time();
-unsigned long long ft_get_time_micro();
+unsigned long long	ft_get_time();
+unsigned long long	ft_get_time_micro();
 void				ft_myusleep(t_philo *philo, unsigned long long ms);
 
 /*MONITOR*/
