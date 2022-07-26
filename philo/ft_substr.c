@@ -6,11 +6,11 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 18:48:23 by eleotard          #+#    #+#             */
-/*   Updated: 2022/04/11 15:57:07 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/26 21:29:09 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h" 
+#include "philo.h" 
 
 static char	*ft_slcpy(char *d, char const *s, unsigned int start, size_t len)
 {
@@ -53,10 +53,3 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	copy = ft_slcpy(copy, s, start, len);
 	return (copy);
 }
-
-/*#include <stdio.h>
-int	main(void)
-{
-	char	base[] = "hello world";
-	printf("%s", ft_substr(base, 6, 5));
-}*/

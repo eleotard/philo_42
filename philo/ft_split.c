@@ -6,11 +6,11 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 17:16:21 by eleotard          #+#    #+#             */
-/*   Updated: 2022/04/11 15:57:49 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/26 21:29:02 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "philo.h"
 
 static int	ft_countwords(const char *s, char c)
 {
@@ -86,21 +86,3 @@ char	**ft_split(char const *s, char c)
 	tab = ft_do_tab(s, c, tab, k);
 	return (tab);
 }
-
-/*#include <stdio.h>
-int main (void)
-{
-	char s[] = "    Je suis   elsie ";
-	char c = ' ';
-	int	i;
-	char **result;
-
-	result = ft_split(s, c);
-	i = 0;
-	while (i < 4)
-	{
-		printf("tab[%d]: [%s]\n",i ,  result[i]);
-		i++;
-	}
-	return (0);
-}*/

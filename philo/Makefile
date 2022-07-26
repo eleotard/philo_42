@@ -6,7 +6,7 @@
 #    By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/07 17:44:44 by eleotard          #+#    #+#              #
-#    Updated: 2022/07/26 16:58:18 by eleotard         ###   ########.fr        #
+#    Updated: 2022/07/26 21:40:59 by eleotard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,13 @@ SRCS =	main.c 				\
 		error_thread.c 		\
 		threads.c 			\
 		print.c 			\
+		forks.c 			\
+		ft_atoi.c			\
+		ft_strlen.c			\
+		ft_substr.c			\
+		ft_putchar_fd.c		\
+		ft_putstr_fd.c 		\
+		ft_split.c 			\
 
 OBJS = ${SRCS:%.c=%.o}
 
@@ -34,30 +41,22 @@ CC = gcc
 
 RM = rm -rf
 
-FLAGS = -g -O3 -pthread -Wall -Wextra -Werror
+FLAGS = -pthread -Wall -Wextra -Werror
 
-LIBFT = -Llibft -lft
-
-%.o: %.c 
+%.o: %.c
 	${CC} ${FLAGS} -c $< -o $@
 
 all: ${NAME}
 
-${NAME}: ${OBJS} libft/libft.a
-	${CC} ${FLAGS} -o ${NAME} ${OBJS} ${LIBFT}
-
-libft/libft.a:
-	make -C libft
-
-ft_printf/lftprintf.a:
-	make -C ft_printf
+${NAME}: ${OBJS}
+	${CC} ${FLAGS} -o $@ $^
 	
 clean:
 	${RM} ${OBJS}
-	make -C libft clean
 
 fclean: clean
 	${RM} ${NAME}
-	make -C libft fclean
 
-re: clean fclean all
+re: fclean all
+
+.PHONY : all clean fclean re

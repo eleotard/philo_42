@@ -6,39 +6,11 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 17:06:42 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/26 17:23:46 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/26 19:00:08 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	ft_attribute_philo_forks(t_philo *bigdata)
-{
-	t_philo	*philo;
-	int		i;
-
-	i = -1;
-	philo = bigdata;
-	while (++i < bigdata->general->nb_of_philo)
-	{
-		if (philo->philo_nb == 0)
-		{
-			philo->forks.f_fork = &philo->tab_mut[0];
-			philo->forks.s_fork = &philo->tab_mut[1];
-		}
-		else if (philo->philo_nb == (bigdata->general->nb_of_philo - 1))
-		{
-			philo->forks.f_fork = &philo->tab_mut[0];
-			philo->forks.s_fork = &philo->tab_mut[philo->philo_nb];
-		}
-		else
-		{
-			philo->forks.f_fork = &philo->tab_mut[philo->philo_nb];
-			philo->forks.s_fork = &philo->tab_mut[(philo->philo_nb) + 1];
-		}
-		philo++;
-	}
-}
 
 pthread_mutex_t	*ft_init_mut_tab(t_general *general)
 {

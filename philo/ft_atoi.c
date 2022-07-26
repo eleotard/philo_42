@@ -1,40 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_striteri.c                                      :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/11 19:53:25 by eleotard          #+#    #+#             */
-/*   Updated: 2021/12/13 12:40:19 by eleotard         ###   ########.fr       */
+/*   Created: 2021/11/25 13:53:31 by eleotard          #+#    #+#             */
+/*   Updated: 2022/07/26 21:28:39 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_striteri(char *s, void (*f)(unsigned int, char *))
+int	ft_atoi(const char *nptr)
 {
 	int	i;
+	int	result;
+	int	sign;
 
-	if (!s || !f)
-		return ;
+	if (!nptr)
+		return (0);
 	i = 0;
-	while (s[i])
+	result = 0;
+	sign = 1;
+	while (nptr[i] == '\v' || nptr[i] == '\f' || nptr[i] == '\r'
+		|| nptr[i] == '\t' || nptr[i] == '\n' || nptr[i] == ' ')
+		i++;
+	if (nptr[i] == '-' || nptr[i] == '+')
 	{
-		(*f)(i, &s[i]);
+		if (nptr[i] == '-')
+			sign = -1;
 		i++;
 	}
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		result = result * 10 + (nptr[i] - 48);
+		i++;
+	}
+	return (sign * result);
 }
-
-/*void	fct(unsigned int a, char *s)
-{
-	*s = *s + a;
-}
-
-#include <stdio.h>
-int	main()
-{
-	char	s[] = "0000000000";
-	void (*ptr)(unsigned int, char *);
-	ptr = &fct;
-	ft_striteri(s, ptr);
-	printf("%s", s);
-}*/

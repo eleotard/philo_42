@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 17:09:52 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/26 17:50:52 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/26 18:28:55 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ int	ft_state_over_or_dead(t_philo *philo, int state)
 	return (0);
 }
 
-t_philo	*ft_make_death_check(t_philo *philo, int *i, int *state)
+t_philo	*ft_make_death_check(t_philo *bigdata, t_philo *philo, int *state)
 {
-	printf("i = %d\n", *i);
-	while ((*i) < philo->general->nb_of_philo)
+	int	i;
+
+	i = 0;
+	while (i < bigdata->general->nb_of_philo)
 	{
 		pthread_mutex_lock(&philo->mut->m_meal);
 		if ((ft_get_time() - philo->general->start - philo->last_meal
@@ -54,23 +56,21 @@ t_philo	*ft_make_death_check(t_philo *philo, int *i, int *state)
 		}
 		pthread_mutex_unlock(&philo->mut->m_meal);
 		philo++;
-		*i = *i + 1;
+		i++;
 	}
 	return (philo);
 }
 
 void	ft_check_philo_states(t_philo *bigdata)
 {
-	int		i;
 	int		state;
 	t_philo	*philo;
 
 	state = 0;
 	while (1)
 	{
-		i = 0;
 		philo = bigdata;
-		philo = ft_make_death_check(philo, &i, &state);
+		philo = ft_make_death_check(bigdata, philo, &state);
 		if (ft_state_over_or_dead(philo, state))
 			break ;
 		usleep(8000);

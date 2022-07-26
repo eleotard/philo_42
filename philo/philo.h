@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:24:47 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/26 17:43:30 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/26 21:27:49 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 # include <pthread.h>
 # include <unistd.h>
 # include <sys/time.h>
-
-# include "libft/libft.h"
 
 # define ERROR	-1
 # define EAT	1
@@ -111,7 +109,7 @@ void				*ft_destroy_all_mutexs(pthread_mutex_t *tab_mut, int k,
 int					ft_find_nb_of_arg(char *str);
 
 /*ACTIONS*/
-void				ft_eat(t_philo *philo);
+int					ft_eat(t_philo *philo);
 void				ft_sleep(t_philo *philo);
 void				ft_think(t_philo *philo);
 
@@ -121,6 +119,8 @@ int					ft_init_mutex_struct(t_mutex *mut);
 t_philo				*ft_init_philo_structs(t_general *general, t_mutex	*mutex,
 						int *print);
 pthread_mutex_t		*ft_init_mut_tab(t_general *general);
+
+/*FORKS*/
 void				ft_attribute_philo_forks(t_philo *bigdata);
 
 /*PRINT*/
@@ -134,7 +134,8 @@ void				ft_myusleep(unsigned long long ms);
 /*MONITOR*/
 void				ft_check_philo_states(t_philo *bigdata);
 int					ft_state_over_or_dead(t_philo *philo, int state);
-t_philo				*ft_make_death_check(t_philo *philo, int *i, int *state);
+t_philo				*ft_make_death_check(t_philo *bigdata, t_philo *philo,
+						int *state);
 
 /*ERROR THREAD*/
 int					ft_deal_with_ptc(t_philo *bigdata, int i);
@@ -143,11 +144,20 @@ int					ft_deal_with_ptj(t_philo *bigdata);
 /*THREADS FONCTIONS*/
 int					ft_create_threads(t_philo *bigdata);
 int					ft_join_threads(t_philo *bigdata);
-void				*routine(void	*da);
+void				*routine(void *da);
 int					ft_check_thread_error_in_routine(t_philo *philo);
 int					ft_check_nb_of_meals(t_philo *philo, int meal);
 void				ft_mutex_starts_threads(t_philo *philo);
 void				ft_print_output(t_philo *philo, char *str);
 int					ft_check_print(t_philo *philo);
+
+/*MICROL*/
+int					ft_atoi(const char *nptr);
+void				ft_putchar_fd(char c, int fd);
+void				ft_putstr_fd(char *s, int fd);
+char				**ft_split(char const *s, char c);
+size_t				ft_strlen(const char *s);
+char				*ft_substr(char const *s, unsigned int start,
+						size_t len);
 
 #endif
