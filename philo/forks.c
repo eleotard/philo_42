@@ -6,13 +6,13 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 18:59:40 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/26 20:35:17 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/27 21:22:31 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_attribute_philo_forks(t_philo *bigdata)
+void	attribute_forks(t_philo *bigdata)
 {
 	int		i;
 	t_philo	*philo;
@@ -38,4 +38,18 @@ void	ft_attribute_philo_forks(t_philo *bigdata)
 		}
 		philo++;
 	}
+}
+
+void	ft_attribute_philo_forks(t_philo *bigdata)
+{
+	t_philo	*philo;
+
+	philo = bigdata;
+	if (bigdata->general->nb_of_philo == 1)
+	{
+		philo->forks.f_fork = &philo->tab_mut[0];
+		philo->forks.s_fork = NULL;
+	}
+	else
+		attribute_forks(bigdata);
 }

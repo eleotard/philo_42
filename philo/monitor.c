@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 17:09:52 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/26 18:28:55 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/27 21:26:25 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,7 @@
 int	ft_state_over_or_dead(t_philo *philo, int state)
 {
 	if (state == OVER)
-	{
-		pthread_mutex_lock(&philo->mut->can_print);
-		*philo->print = 0;
-		pthread_mutex_unlock(&philo->mut->can_print);
 		return (1);
-	}
 	else if (state == DEAD)
 	{
 		pthread_mutex_lock(&philo->mut->can_print);

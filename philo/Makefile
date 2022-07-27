@@ -6,7 +6,7 @@
 #    By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/07 17:44:44 by eleotard          #+#    #+#              #
-#    Updated: 2022/07/26 21:40:59 by eleotard         ###   ########.fr        #
+#    Updated: 2022/07/27 15:12:17 by eleotard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ CC = gcc
 
 RM = rm -rf
 
-FLAGS = -pthread -Wall -Wextra -Werror
+FLAGS = -O3 -pthread -Wall -Wextra -Werror
 
 %.o: %.c
 	${CC} ${FLAGS} -c $< -o $@
