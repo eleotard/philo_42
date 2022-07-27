@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:24:47 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/26 21:27:49 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/27 14:41:36 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void				ft_print_output(t_philo *philo, char *str);
 /*TIME*/
 unsigned long long	ft_get_time(void);
 unsigned long long	ft_get_time_micro(void);
-void				ft_myusleep(unsigned long long ms);
+void				ft_myusleep(t_philo *philo, unsigned long long ms);
 
 /*MONITOR*/
 void				ft_check_philo_states(t_philo *bigdata);

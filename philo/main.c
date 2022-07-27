@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 02:19:03 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/26 21:14:36 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/27 14:42:39 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,10 @@ void	*routine(void	*da)
 		return (NULL);
 	if (((philo->general->nb_of_philo) % 2 == 0)
 		&& (((philo->philo_nb + 1) % 2) == 0))
-		ft_myusleep(philo->general->time_to_eat / 10);
+		ft_myusleep(philo, philo->general->time_to_eat / 10);
 	else if (((philo->general->nb_of_philo) % 2 == 1)
 		&& (((philo->philo_nb + 1) % 2) == 1))
-		ft_myusleep(philo->general->time_to_eat / 10);
+		ft_myusleep(philo, philo->general->time_to_eat / 10);
 	meal = 0;
 	while (ft_check_print(philo) == 0)
 	{

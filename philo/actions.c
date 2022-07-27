@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 16:54:55 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/26 20:54:44 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/27 14:42:19 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_eat(t_philo *philo)
 	philo->last_meal = (ft_get_time() - philo->general->start);
 	pthread_mutex_unlock(&philo->mut->m_meal);
 	ft_print_output(philo, "is eating\n");
-	ft_myusleep(philo->general->time_to_eat);
+	ft_myusleep(philo, philo->general->time_to_eat);
 	pthread_mutex_unlock(philo->forks.f_fork);
 	pthread_mutex_unlock(philo->forks.s_fork);
 	return (1);
@@ -33,7 +33,7 @@ int	ft_eat(t_philo *philo)
 void	ft_sleep(t_philo *philo)
 {
 	ft_print_output(philo, "is sleeping\n");
-	ft_myusleep(philo->general->time_to_sleep);
+	ft_myusleep(philo, philo->general->time_to_sleep);
 }
 
 void	ft_think(t_philo *philo)
@@ -49,6 +49,6 @@ void	ft_think(t_philo *philo)
 	{
 		time_to_think = 1 * (philo->general->time_to_eat);
 		ft_print_output(philo, "is thinking\n");
-		ft_myusleep(time_to_think);
+		ft_myusleep(philo, time_to_think);
 	}
 }

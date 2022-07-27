@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 20:41:15 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/26 17:24:06 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/27 14:48:43 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ unsigned long long	ft_get_time_micro(void)
 	return (time);
 }
 
-void	ft_myusleep(unsigned long long ms)
+void	ft_myusleep(t_philo *philo, unsigned long long ms)
 {
 	unsigned long long	curr_time;
 	unsigned long long	start;
@@ -42,6 +42,13 @@ void	ft_myusleep(unsigned long long ms)
 	ms = ms * 1000;
 	while (curr_time <= ms)
 	{
+		pthread_mutex_lock(&philo->mut->can_print);
+		if (*philo->print == 0)
+		{
+			pthread_mutex_unlock(&philo->mut->can_print);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->mut->can_print);
 		curr_time = ft_get_time_micro() - start;
 		if (ms - curr_time < 100)
 			usleep((ms - curr_time) / 10);

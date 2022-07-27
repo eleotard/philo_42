@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 18:51:40 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/24 23:40:37 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/27 14:47:51 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	ft_check_parsing(int argc, char **argv)
 		|| ft_check_correct_int(argv) == ERROR
 		|| ft_check_overflow(argv) == ERROR)
 	{
-		ft_putstr_fd("Error\n", 2);
 		return (ERROR);
 	}
 	return (0);
