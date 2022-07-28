@@ -6,7 +6,7 @@
 #    By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/07 17:44:44 by eleotard          #+#    #+#              #
-#    Updated: 2022/07/27 15:12:17 by eleotard         ###   ########.fr        #
+#    Updated: 2022/07/28 17:56:07 by eleotard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ CC = gcc
 
 RM = rm -rf
 
-FLAGS = -O3 -pthread -Wall -Wextra -Werror
+FLAGS = -O3 -pthread -Wall -Wextra -Werror -g3 -fsanitize=address
 
 %.o: %.c
 	${CC} ${FLAGS} -c $< -o $@

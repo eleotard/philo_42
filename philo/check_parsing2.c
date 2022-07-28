@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 18:07:00 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/24 23:50:11 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/28 19:17:00 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ int	ft_check_arg_2(char **argv)
 
 	k = 0;
 	tab = ft_split(argv[1], ' ');
+	if (!tab)
+		return (ERROR);
 	while (tab[k])
 		k++;
 	ft_free_tab(tab);
@@ -55,11 +57,13 @@ int	ft_check_arg_5(char **argv)
 	int		i;
 	char	**tab;
 
-	i = -1;
-	k = 0;
+	i = 0;
 	while (argv[++i])
 	{
+		k = 0;
 		tab = ft_split(argv[i], ' ');
+		if (!tab)
+			return (ERROR);
 		while (tab[k])
 			k++;
 		ft_free_tab(tab);
@@ -75,11 +79,13 @@ int	ft_check_arg_6(char **argv)
 	int		i;
 	char	**tab;
 
-	i = -1;
-	k = 0;
+	i = 0;
 	while (argv[++i])
 	{
+		k = 0;
 		tab = ft_split(argv[i], ' ');
+		if (!tab)
+			return (ERROR);
 		while (tab[k])
 			k++;
 		ft_free_tab(tab);
