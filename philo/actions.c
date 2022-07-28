@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/21 16:54:55 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/27 21:25:38 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/29 00:57:33 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,7 @@ void	ft_think(t_philo *philo)
 	unsigned long long	time_to_think;
 
 	if (((philo->general->nb_of_philo) % 2) == 0)
-	{
-		time_to_think = 0;
 		ft_print_output(philo, "is thinking\n");
-	}
 	else
 	{
 		time_to_think = 1 * (philo->general->time_to_eat);

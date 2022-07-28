@@ -6,7 +6,7 @@
 /*   By: eleotard <eleotard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 16:59:49 by eleotard          #+#    #+#             */
-/*   Updated: 2022/07/04 17:26:29 by eleotard         ###   ########.fr       */
+/*   Updated: 2022/07/29 00:58:00 by eleotard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	ft_atoi_max(const char *nptr)
 	long int	result;
 	int			sign;
 
-	i = 0;
 	result = 0;
 	sign = 1;
 	i = ft_previous_check(&sign, nptr);
